@@ -12,15 +12,7 @@ class ArtisteController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json(Artiste::all(), 200);
     }
 
     /**
@@ -28,22 +20,7 @@ class ArtisteController extends Controller
      */
     public function show(Artiste $artiste)
     {
-        //
-    }
+        return response()->json($artiste->load(['albums']), 200);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Artiste $artiste)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Artiste $artiste)
-    {
-        //
     }
 }

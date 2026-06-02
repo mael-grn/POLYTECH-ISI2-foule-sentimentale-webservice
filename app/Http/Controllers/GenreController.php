@@ -12,15 +12,8 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
-    }
+        return response()->json(Genre::all(), 200);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -28,22 +21,7 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
-    }
+        return response()->json($genre->load(['musiques']), 200);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Genre $genre)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Genre $genre)
-    {
-        //
     }
 }

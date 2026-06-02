@@ -12,15 +12,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
-    }
+        return response()->json(Album::all(), 200);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -28,22 +21,6 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Album $album)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Album $album)
-    {
-        //
+        return response()->json($album->load(['musiques']), 200);
     }
 }
