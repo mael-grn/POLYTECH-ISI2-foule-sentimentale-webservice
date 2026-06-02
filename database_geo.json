@@ -1,0 +1,47 @@
+{
+  "width": 486,
+  "height": 469,
+  "cx": [
+    [ "UTILISATEUR", 65 ],
+    [ "CREE", 179 ],
+    [ "PLAYLIST", 309 ],
+    [ "ACHETE", 179 ],
+    [ "CONTIENT", 309 ],
+    [ "GENRE", 65 ],
+    [ "CLASSE", 179 ],
+    [ "MUSIQUE", 309 ],
+    [ "APPARTIENT", 427 ],
+    [ "ARTISTE", 65 ],
+    [ "PRODUIT", 179 ],
+    [ "ALBUM", 309 ]
+  ],
+  "cy": [
+    [ "UTILISATEUR", 71 ],
+    [ "CREE", 71 ],
+    [ "PLAYLIST", 71 ],
+    [ "ACHETE", 192 ],
+    [ "CONTIENT", 192 ],
+    [ "GENRE", 295 ],
+    [ "CLASSE", 295 ],
+    [ "MUSIQUE", 295 ],
+    [ "APPARTIENT", 295 ],
+    [ "ARTISTE", 416 ],
+    [ "PRODUIT", 416 ],
+    [ "ALBUM", 416 ]
+  ],
+  "shift": [
+    [ "CREE,PLAYLIST,0", 0 ],
+    [ "CREE,UTILISATEUR,0", 0 ],
+    [ "ACHETE,MUSIQUE,0", 0 ],
+    [ "ACHETE,UTILISATEUR,0", 0 ],
+    [ "CONTIENT,PLAYLIST,0", 0 ],
+    [ "CONTIENT,MUSIQUE,0", 0 ],
+    [ "CLASSE,MUSIQUE,0", 0 ],
+    [ "CLASSE,GENRE,0", 0 ],
+    [ "APPARTIENT,ALBUM,0", 0 ],
+    [ "APPARTIENT,MUSIQUE,0", 0 ],
+    [ "PRODUIT,ALBUM,0", 0 ],
+    [ "PRODUIT,ARTISTE,0", 0 ]
+  ],
+  "ratio": []
+}

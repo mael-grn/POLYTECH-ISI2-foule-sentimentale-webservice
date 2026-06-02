@@ -1,0 +1,15 @@
+utilisateur: id, nom, prenom, email, mot_de_passe
+cree, 11 playlist, 0N utilisateur
+playlist: id, nom
+
+achete, 0N musique, 0N utilisateur: prix_achat, date_achat
+contient, 1N playlist, 0N musique
+
+genre: id, nom
+classe, 1N musique, 0N genre
+musique: id, nom, duree, prix
+appartient, 0N album, 11 musique
+
+artiste: id, nom, prenom
+produit, 11 album, 0N artiste
+album: id, nom, date_parution
