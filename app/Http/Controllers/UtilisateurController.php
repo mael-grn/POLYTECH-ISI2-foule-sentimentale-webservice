@@ -58,8 +58,9 @@ class UtilisateurController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Utilisateur $utilisateur)
+    public function showme(Request $request)
     {
+        $utilisateur = $request->user();
         return response()->json($utilisateur->load(['playlists', 'musiques']), 200);
     }
 
@@ -68,6 +69,10 @@ class UtilisateurController extends Controller
      */
     public function update(Request $request, Utilisateur $utilisateur)
     {
+        $connected = $request->user();
+        if ($connected->id != $utilisateur->id) {
+            return response()->json([], 401);
+        }
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:utilisateurs,email,' . $utilisateur->id,
@@ -84,6 +89,10 @@ class UtilisateurController extends Controller
      */
     public function destroy(Utilisateur $utilisateur)
     {
+        $connected = $request->user();
+        if ($connected->id != $utilisateur->id) {
+            return response()->json([], 401);
+        }
         $utilisateur->delete();
         return response()->json(['message' => 'Utilisateur supprimé avec succès'], 200);
     }

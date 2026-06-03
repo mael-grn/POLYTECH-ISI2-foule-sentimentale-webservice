@@ -9,7 +9,8 @@ class Playlist extends Model
     protected $table = 'playlists';
 
     protected $fillable = [
-        'nom'
+        'nom',
+        'id_utilisateur',
     ];
 
     public function utilisateur()
@@ -25,4 +26,3 @@ class Playlist extends Model
     }
 
 }
-

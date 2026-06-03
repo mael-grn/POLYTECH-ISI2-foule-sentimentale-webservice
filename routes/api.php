@@ -21,6 +21,8 @@ Route::post('/login', [UtilisateurController::class, 'login'])->name('login');
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [UtilisateurController::class, 'showme']);
+    Route::get('/musiques/paid', [MusiqueController::class, 'showfree']);
     Route::post('/logout', [UtilisateurController::class, 'logout']);
     Route::apiResource('utilisateurs', UtilisateurController::class);
     Route::apiResource('musiques', MusiqueController::class);
@@ -28,7 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('albums', AlbumController::class);
     Route::apiResource('genres', GenreController::class);
     Route::apiResource('artistes', ArtisteController::class);
+    Route::get('/playlists/mine', [PlaylistController::class, 'mine']);
+    Route::post('/playlists/{playlist}/add-musiques', [PlaylistController::class, 'addMusiques']);
     Route::apiResource('playlists', PlaylistController::class);
+    Route::post('/playlists/{playlist}/remove-musiques', [PlaylistController::class, 'removeMusiques']);
 });
-
-

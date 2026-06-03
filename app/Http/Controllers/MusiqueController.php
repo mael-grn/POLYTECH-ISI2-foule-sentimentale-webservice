@@ -23,10 +23,16 @@ class MusiqueController extends Controller
         return response()->json($musique, 200);
     }
 
-    public function showfree(Musique $musique)
+    public function showfree()
     {
         $musiquesGratuites = Musique::where('prix', 0)->get();
         return response()->json($musiquesGratuites, 200);
+    }
+
+    public function showpaid()
+    {
+        $musiquesPayantes = Musique::where('prix', '>', 0)->get();
+        return response()->json($musiquesPayantes, 200);
     }
 
     public function buy(Request $request, Musique $musique)

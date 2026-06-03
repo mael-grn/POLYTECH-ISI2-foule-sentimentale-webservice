@@ -112,4 +112,69 @@ class PlaylistController extends Controller
             'refusees' => $musiquesRefusees,
         ], 200);
     }
+
+    /**
+     * Récupère les playlists de l'utilisateur authentifié.
+     */
+    public function mine(Request $request)
+    {
+        $utilisateur = $request->user();
+        if (! $utilisateur) {
+            return response()->json(['message' => 'Utilisateur non authentifié.'], 401);
+        }
+
+        $playlists = $utilisateur->playlists()->with('musiques')->get();
+
+        return response()->json($playlists, 200);
+    }
+
+    public function removeMusiques(Playlist $playlist, Request $request)
+    {
+        $utilisateur = $request->user();
+        if (! $utilisateur) {
+            return response()->json(['message' => 'Utilisateur non authentifié.'], 401);
+        }
+
+        if ($playlist->id_utilisateur !== $utilisateur->id) {
+            return response()->json(['message' => 'Vous ne pouvez modifier que vos propres playlists.'], 403);
+        }
+
+        $validated = $request->validate([
+            'musiques' => 'required|array|min:1',
+            'musiques.*' => 'required',
+        ]);
+
+        $musiqueIds = array_map(function ($musique) {
+            if (is_array($musique) && isset($musique['id'])) {
+                return $musique['id'];
+            }
+            return $musique;
+        }, $validated['musiques']);
+
+        $invalidIds = array_filter($musiqueIds, function ($id) {
+            return !is_int($id) && !ctype_digit((string) $id);
+        });
+        if ($invalidIds) {
+            return response()->json(['message' => 'Les IDs de musiques doivent être des entiers.'], 400);
+        }
+
+        $musiqueIds = array_map('intval', $musiqueIds);
+        $musiqueIds = array_unique($musiqueIds);
+
+        $playlist->musiques()->detach($musiqueIds);
+
+        $musiques = Musique::whereIn('id', $musiqueIds)->get();
+
+        $musiquesSupprimes = $musiques->map(function ($musique) {
+            return [
+                'id' => $musique->id,
+                'nom' => $musique->nom,
+            ];
+        })->toArray();
+
+        return response()->json([
+            'message' => 'Suppression des musiques traité.',
+            'supprimes' => $musiquesSupprimes,
+        ], 200);
+    }
 }
