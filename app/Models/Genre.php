@@ -12,7 +12,7 @@ class Genre extends Model
         'nom'
     ];
 
-    public function utilisateurs()
+    public function musiques()
     {
         return $this->belongsToMany(Musique::class, 'genre_musique', 'id_genre', 'id_musique');
     }

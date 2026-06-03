@@ -10,9 +10,11 @@ class Album extends Model
 
     protected $fillable = [
         'nom',
-        'date_parution'
+        'date_parution',
+        'id_artiste'
     ];
-    public function album()
+
+    public function artiste()
     {
         return $this->belongsTo(Artiste::class, 'id_artiste');
     }

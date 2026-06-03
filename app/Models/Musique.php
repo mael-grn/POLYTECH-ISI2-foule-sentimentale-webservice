@@ -12,15 +12,21 @@ class Musique extends Model
         'nom',
         'duree',
         'prix',
+        'id_album',
     ];
 
     public function album()
     {
-        return $this->belongsTo(Album::class, 'album_id');
+        return $this->belongsTo(Album::class, 'id_album');
     }
     public function utilisateurs()
     {
         return $this->belongsToMany(Utilisateur::class, 'musique_utilisateur', 'id_musique', 'id_utilisateur');
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genre::class, 'genre_musique', 'id_musique', 'id_genre');
     }
 
     public function playlists()
