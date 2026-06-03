@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Musique;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 
@@ -58,5 +59,57 @@ class PlaylistController extends Controller
     {
         $playlist->delete();
         return response()->json(['message' => 'Playlist supprimé avec succès'], 200);
+    }
+
+    public function addMusiques(Playlist $playlist, Request $request)
+    {
+        $utilisateur = $request->user();
+        if (! $utilisateur) {
+            return response()->json(['message' => 'Utilisateur non authentifié.'], 401);
+        }
+
+        if ($playlist->id_utilisateur !== $utilisateur->id) {
+            return response()->json(['message' => 'Vous ne pouvez modifier que vos propres playlists.'], 403);
+        }
+
+        $validated = $request->validate([
+            'musiques' => 'required|array|min:1',
+            'musiques.*' => 'integer|distinct|exists:musiques,id',
+        ]);
+
+        $musiques = Musique::whereIn('id', $validated['musiques'])->get();
+        $musiquesRefusees = [];
+        $musiquesAjoutees = [];
+
+        foreach ($musiques as $musique) {
+            $estGratuite = (float) $musique->prix === 0.0;
+            $aAchete = $utilisateur->musiques()->whereKey($musique->id)->exists();
+
+            if (! $estGratuite && ! $aAchete) {
+                $musiquesRefusees[] = [
+                    'id' => $musique->id,
+                    'nom' => $musique->nom,
+                ];
+                continue;
+            }
+
+            $playlist->musiques()->syncWithoutDetaching([
+                $musique->id => [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ]);
+
+            $musiquesAjoutees[] = [
+                'id' => $musique->id,
+                'nom' => $musique->nom,
+            ];
+        }
+
+        return response()->json([
+            'message' => 'Ajout des musiques traité.',
+            'ajoutees' => $musiquesAjoutees,
+            'refusees' => $musiquesRefusees,
+        ], 200);
     }
 }

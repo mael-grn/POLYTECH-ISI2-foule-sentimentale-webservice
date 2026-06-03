@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 
@@ -16,11 +16,43 @@ class UtilisateurController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:utilisateurs,email',
-            'mot_de_passe' => 'required|string|min:6|confirmed',
+            'mot_de_passe' => 'required|string|min:6',
             ]);
 
         $utilisateur = Utilisateur::create($validated);
-        return response()->json($utilisateur, 201);
+        $token = $utilisateur->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'utilisateur' => $utilisateur,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'mot_de_passe' => 'required|string',
+        ]);
+
+        $utilisateur = Utilisateur::where('email', $request->email)->first();
+
+        if (! $utilisateur || ! Hash::check($request->mot_de_passe, $utilisateur->mot_de_passe)) {
+            return response()->json(['message' => 'Identifiants invalides'], 401);
+        }
+
+        $token = $utilisateur->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'utilisateur' => $utilisateur,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ], 200);
+    }
+
+    public function logout(Request $request) {
+        $request->user()->tokens()->delete();
+        return response()->json([]);
     }
 
     /**

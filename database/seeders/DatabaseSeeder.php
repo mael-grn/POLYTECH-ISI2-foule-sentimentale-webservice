@@ -21,13 +21,5 @@ class DatabaseSeeder extends Seeder
             GenreSeeder::class,
             MusiqueSeeder::class,
         ]);
-
-        Utilisateur::updateOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'nom' => 'Test User',
-                'mot_de_passe' => 'password',
-            ]
-        );
     }
 }

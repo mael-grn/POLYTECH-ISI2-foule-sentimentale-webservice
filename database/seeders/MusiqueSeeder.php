@@ -93,9 +93,9 @@ class MusiqueSeeder extends Seeder
             ],
 
             'Toxicity' => [
-                ['nom' => 'Chop Suey!', 'duree' => 210, 'prix' => 1.29],
-                ['nom' => 'Toxicity', 'duree' => 215, 'prix' => 1.29],
-                ['nom' => 'Aerials', 'duree' => 234, 'prix' => 1.19],
+                ['nom' => 'Chop Suey!', 'duree' => 210, 'prix' => 0],
+                ['nom' => 'Toxicity', 'duree' => 215, 'prix' => 0],
+                ['nom' => 'Aerials', 'duree' => 234, 'prix' => 0],
             ],
             'Mezmerize' => [
                 ['nom' => 'B.Y.O.B.', 'duree' => 255, 'prix' => 1.29],
@@ -109,9 +109,9 @@ class MusiqueSeeder extends Seeder
                 ['nom' => 'Hard to Explain', 'duree' => 220, 'prix' => 1.29],
             ],
             'Room on Fire' => [
-                ['nom' => 'Reptilia', 'duree' => 212, 'prix' => 1.29],
-                ['nom' => 'The End Has No End', 'duree' => 180, 'prix' => 1.19],
-                ['nom' => '12:51', 'duree' => 215, 'prix' => 1.19],
+                ['nom' => 'Reptilia', 'duree' => 212, 'prix' => 0],
+                ['nom' => 'The End Has No End', 'duree' => 180, 'prix' => 0],
+                ['nom' => '12:51', 'duree' => 215, 'prix' => 0],
             ],
 
             'Hot Fuss' => [
