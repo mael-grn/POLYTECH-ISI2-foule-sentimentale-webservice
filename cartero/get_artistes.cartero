@@ -1,0 +1,7 @@
+version = 1
+url = "http://127.0.0.1:8000/api/artistes/"
+method = "GET"
+
+[authorization]
+type = "bearer"
+token = "qKO5j2fBUg31qAbY2H7rU1ECDpoh540XuM6128cl0a7481dc"

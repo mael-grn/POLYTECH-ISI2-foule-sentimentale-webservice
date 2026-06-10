@@ -1,0 +1,12 @@
+version = 1
+url = "http://127.0.0.1:8000/api/login"
+method = "POST"
+
+[body]
+type = "raw"
+format = "json"
+body = """
+{
+    "email":"maelgarnier5@gmail.com",
+    "mot_de_passe":"123456"
+}"""

@@ -1,0 +1,7 @@
+version = 1
+url = "http://127.0.0.1:8000/api/musiques"
+method = "GET"
+
+[authorization]
+type = "bearer"
+token = "Hnvdelak1Q1VNBGours8LoEo1mqdWGhPiM9acOhq753f3c9c"

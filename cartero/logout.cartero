@@ -1,0 +1,7 @@
+version = 1
+url = "http://127.0.0.1:8000/api/logout"
+method = "POST"
+
+[authorization]
+type = "bearer"
+token = "wDZdr5yyJLjfFsf1uiDgBmodpi3azjkNigqCM2LT1d5df823"
