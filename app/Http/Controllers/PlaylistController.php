@@ -13,7 +13,10 @@ class PlaylistController extends Controller
      */
     public function index()
     {
-        return response()->json(Playlist::all(), 200);
+        return response()->json([
+            'message' => 'Liste des playlists récupérée avec succès.',
+            'data' => Playlist::all(),
+        ], 200);
     }
 
     /**
@@ -21,13 +24,23 @@ class PlaylistController extends Controller
      */
     public function store(Request $request)
     {
+        $utilisateur = $request->user();
+        if (!$utilisateur) {
+            return response()->json(['message' => 'Utilisateur non authentifié.'], 401);
+        }
+
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
-            'id_utilisateur' => 'required|integer|exists:utilisateurs,id',
-            ]);
+        ]);
+
+        $validated['id_utilisateur'] = $utilisateur->id;
 
         $playlist = Playlist::create($validated);
-        return response()->json($playlist, 201);
+
+        return response()->json([
+            'message' => 'Playlist créée avec succès.',
+            'data' => $playlist,
+        ], 201);
     }
 
     /**
@@ -35,7 +48,10 @@ class PlaylistController extends Controller
      */
     public function show(Playlist $playlist)
     {
-        return response()->json($playlist->load(['utilisateur', 'musiques']), 200);
+        return response()->json([
+            'message' => 'Playlist récupérée avec succès.',
+            'data' => $playlist->load(['utilisateur', 'musiques']),
+        ], 200);
     }
 
     /**
@@ -49,7 +65,10 @@ class PlaylistController extends Controller
 
         $playlist->update($validated);
 
-        return response()->json($playlist, 200);
+        return response()->json([
+            'message' => 'Playlist mise à jour avec succès.',
+            'data' => $playlist,
+        ], 200);
     }
 
     /**
@@ -58,7 +77,7 @@ class PlaylistController extends Controller
     public function destroy(Playlist $playlist)
     {
         $playlist->delete();
-        return response()->json(['message' => 'Playlist supprimé avec succès'], 200);
+        return response()->json(['message' => 'Playlist supprimée avec succès.'], 200);
     }
 
     public function addMusiques(Playlist $playlist, Request $request)
@@ -89,6 +108,7 @@ class PlaylistController extends Controller
                 $musiquesRefusees[] = [
                     'id' => $musique->id,
                     'nom' => $musique->nom,
+                    'message' => 'Musique payante non achetée.',
                 ];
                 continue;
             }
@@ -103,11 +123,12 @@ class PlaylistController extends Controller
             $musiquesAjoutees[] = [
                 'id' => $musique->id,
                 'nom' => $musique->nom,
+                'message' => $estGratuite ? 'Musique gratuite ajoutée.' : 'Musique payante déjà achetée et ajoutée.',
             ];
         }
 
         return response()->json([
-            'message' => 'Ajout des musiques traité.',
+            'message' => 'Traitement des musiques terminé.',
             'ajoutees' => $musiquesAjoutees,
             'refusees' => $musiquesRefusees,
         ], 200);
@@ -125,7 +146,10 @@ class PlaylistController extends Controller
 
         $playlists = $utilisateur->playlists()->with('musiques')->get();
 
-        return response()->json($playlists, 200);
+        return response()->json([
+            'message' => 'Playlists de l’utilisateur récupérées avec succès.',
+            'data' => $playlists,
+        ], 200);
     }
 
     public function removeMusiques(Playlist $playlist, Request $request)
@@ -173,7 +197,7 @@ class PlaylistController extends Controller
         })->toArray();
 
         return response()->json([
-            'message' => 'Suppression des musiques traité.',
+            'message' => 'Suppression des musiques terminée.',
             'supprimes' => $musiquesSupprimes,
         ], 200);
     }

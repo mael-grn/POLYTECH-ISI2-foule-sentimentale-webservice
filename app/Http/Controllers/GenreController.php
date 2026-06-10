@@ -12,7 +12,10 @@ class GenreController extends Controller
      */
     public function index()
     {
-        return response()->json(Genre::all(), 200);
+        return response()->json([
+            'message' => 'Liste des genres récupérée avec succès.',
+            'data' => Genre::all(),
+        ], 200);
 
     }
 
@@ -21,7 +24,10 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        return response()->json($genre->load(['musiques']), 200);
+        return response()->json([
+            'message' => 'Genre récupéré avec succès.',
+            'data' => $genre->load(['musiques']),
+        ], 200);
 
     }
 }

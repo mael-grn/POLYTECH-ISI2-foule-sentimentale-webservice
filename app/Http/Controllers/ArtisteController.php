@@ -12,7 +12,10 @@ class ArtisteController extends Controller
      */
     public function index()
     {
-        return response()->json(Artiste::all(), 200);
+        return response()->json([
+            'message' => 'Liste des artistes récupérée avec succès.',
+            'data' => Artiste::all(),
+        ], 200);
     }
 
     /**
@@ -20,7 +23,10 @@ class ArtisteController extends Controller
      */
     public function show(Artiste $artiste)
     {
-        return response()->json($artiste->load(['albums']), 200);
+        return response()->json([
+            'message' => 'Artiste récupéré avec succès.',
+            'data' => $artiste->load(['albums']),
+        ], 200);
 
     }
 }

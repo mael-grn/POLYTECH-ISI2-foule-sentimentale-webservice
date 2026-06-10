@@ -12,7 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json([
+        'message' => 'Utilisateur connecté récupéré avec succès.',
+        'data' => $request->user(),
+    ], 200);
 })->middleware('auth:sanctum');
 
 Route::get('/musiques/free', [MusiqueController::class, 'showfree']);
@@ -22,7 +25,8 @@ Route::post('/login', [UtilisateurController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [UtilisateurController::class, 'showme']);
-    Route::get('/musiques/paid', [MusiqueController::class, 'showfree']);
+    Route::get('/me/factures', [UtilisateurController::class, 'invoices']);
+    Route::get('/musiques/paid', [MusiqueController::class, 'showpaid']);
     Route::post('/logout', [UtilisateurController::class, 'logout']);
     Route::apiResource('utilisateurs', UtilisateurController::class);
     Route::apiResource('musiques', MusiqueController::class);

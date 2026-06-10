@@ -12,7 +12,10 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        return response()->json(Album::all(), 200);
+        return response()->json([
+            'message' => 'Liste des albums récupérée avec succès.',
+            'data' => Album::all(),
+        ], 200);
 
     }
 
@@ -21,6 +24,9 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        return response()->json($album->load(['musiques']), 200);
+        return response()->json([
+            'message' => 'Album récupéré avec succès.',
+            'data' => $album->load(['musiques']),
+        ], 200);
     }
 }

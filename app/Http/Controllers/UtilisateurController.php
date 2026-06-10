@@ -9,6 +9,28 @@ class UtilisateurController extends Controller
 {
 
     /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return response()->json([
+            'message' => 'Liste des utilisateurs récupérée avec succès.',
+            'data' => Utilisateur::all(),
+        ], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Utilisateur $utilisateur)
+    {
+        return response()->json([
+            'message' => 'Utilisateur récupéré avec succès.',
+            'data' => $utilisateur->load(['playlists', 'musiques']),
+        ], 200);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -22,6 +44,7 @@ class UtilisateurController extends Controller
         $utilisateur = Utilisateur::create($validated);
         $token = $utilisateur->createToken('auth_token')->plainTextToken;
         return response()->json([
+            'message' => 'Utilisateur créé avec succès.',
             'utilisateur' => $utilisateur,
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -44,6 +67,7 @@ class UtilisateurController extends Controller
         $token = $utilisateur->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'message' => 'Connexion réussie.',
             'utilisateur' => $utilisateur,
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -52,7 +76,9 @@ class UtilisateurController extends Controller
 
     public function logout(Request $request) {
         $request->user()->tokens()->delete();
-        return response()->json([]);
+        return response()->json([
+            'message' => 'Déconnexion réussie.',
+        ], 200);
     }
 
     /**
@@ -61,7 +87,10 @@ class UtilisateurController extends Controller
     public function showme(Request $request)
     {
         $utilisateur = $request->user();
-        return response()->json($utilisateur->load(['playlists', 'musiques']), 200);
+        return response()->json([
+            'message' => 'Profil récupéré avec succès.',
+            'data' => $utilisateur->load(['playlists', 'musiques']),
+        ], 200);
     }
 
     /**
@@ -70,8 +99,10 @@ class UtilisateurController extends Controller
     public function update(Request $request, Utilisateur $utilisateur)
     {
         $connected = $request->user();
-        if ($connected->id != $utilisateur->id) {
-            return response()->json([], 401);
+        if (! $connected || $connected->id != $utilisateur->id) {
+            return response()->json([
+                'message' => 'Vous n’êtes pas autorisé à modifier cet utilisateur.',
+            ], 403);
         }
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
@@ -81,7 +112,42 @@ class UtilisateurController extends Controller
 
         $utilisateur->update($validated);
 
-        return response()->json($utilisateur, 200);
+        return response()->json([
+            'message' => 'Utilisateur mis à jour avec succès.',
+            'data' => $utilisateur,
+        ], 200);
+    }
+
+    /**
+     * Get invoices for a specific user by ID
+     */
+    public function getInvoices(Utilisateur $utilisateur)
+    {
+        $factures = $utilisateur->musiques()
+            ->select('musiques.nom', 'musiques.prix', 'musique_utilisateur.created_at as date_achat')
+            ->get();
+
+        return response()->json([
+            'message' => 'Factures récupérées avec succès.',
+            'data' => $factures,
+        ], 200);
+    }
+
+    /**
+     * Get invoices for the authenticated user
+     */
+    public function invoices(Request $request)
+    {
+        $utilisateur = $request->user();
+
+        $factures = $utilisateur->musiques()
+            ->select('musiques.nom', 'musiques.prix', 'musique_utilisateur.created_at as date_achat')
+            ->get();
+
+        return response()->json([
+            'message' => 'Factures récupérées avec succès.',
+            'data' => $factures,
+        ], 200);
     }
 
     /**
@@ -89,11 +155,13 @@ class UtilisateurController extends Controller
      */
     public function destroy(Utilisateur $utilisateur)
     {
-        $connected = $request->user();
-        if ($connected->id != $utilisateur->id) {
-            return response()->json([], 401);
+        $connected = request()->user();
+        if (! $connected || $connected->id != $utilisateur->id) {
+            return response()->json([
+                'message' => 'Vous n’êtes pas autorisé à supprimer cet utilisateur.',
+            ], 403);
         }
         $utilisateur->delete();
-        return response()->json(['message' => 'Utilisateur supprimé avec succès'], 200);
+        return response()->json(['message' => 'Utilisateur supprimé avec succès.'], 200);
     }
 }

@@ -19,4 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+        // Retourne un JSON uniforme pour les erreurs 404 (ressource introuvable)
+        $exceptions->renderable(function (\Throwable $e, Request $request) {
+            if ($request->is('api/*')) {
+                if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
+                    || $e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                    return response()->json([
+                        'message' => 'Ressource introuvable.',
+                    ], 404);
+                }
+            }
+        });
     })->create();
